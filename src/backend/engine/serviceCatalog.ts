@@ -51,7 +51,21 @@ const jsonToText = new JsonToText()
 const vision = new Vision(process.env.VISION_SUB_ENDPOINT, process.env.VISION_SUB_KEY, blob)
 
 
-const ImageAnalysisService: BpaService = {
+const addSecurityGroupsService: BpaService = {
+    bpaServiceId: "abc123",
+    inputTypes: ["any"],
+    outputTypes: ["addSecurityGroups"],
+    name: "addSecurityGroups",
+    process: textSegmentation.addSecurityGroups,
+    serviceSpecificConfig: {
+
+    },
+    serviceSpecificConfigDefaults: {
+
+    }
+}
+
+const imageAnalysisService: BpaService = {
     bpaServiceId: "abc123",
     inputTypes: ["bmp", "jpg", "tiff", "gif"],
     outputTypes: ["imageAnalysis"],
@@ -1249,6 +1263,7 @@ export const serviceCatalog = {
     "piiToOpenaiRest": piiToOpenaiRestService,
     "whisper" : whisperBatchService,
     "tableToText" : tableToTextService,
-    "imageAnalysis" : ImageAnalysisService
+    "imageAnalysis" : imageAnalysisService,
+    "addSecurityGroups" : addSecurityGroupsService
 }
 

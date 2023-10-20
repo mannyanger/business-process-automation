@@ -25,6 +25,7 @@ import { sc } from '../Components/serviceCatalog'
 import { Button, Text } from '@fluentui/react-northstar'
 import OpenAiRestDialog from '../Components/Dialogs/OpenAiRestDialog';
 import AnalyzeImageDialog from '../Components/Dialogs/AnalyzeImageDialog';
+import AddSecurityGroupsDialog from '../Components/Dialogs/AddSecurityGroupsDialog';
 
 
 export default function Stages(props) {
@@ -52,6 +53,7 @@ export default function Stages(props) {
     const [hideJsonToTextDialog, setHideJsonToTextDialog] = useState(true)
     const [hideTableToTextDialog, setHideTableToTextDialog] = useState(true)
     const [hideAnalyzeImageDialog, setHideAnalyzeImageDialog] = useState(true)
+    const [hideAddSecurityGroupsDialog, setHideAddSecurityGroupsDialog] = useState(true)
     //const [price, setPrice] = useState(0)
     // const [numDocuments, setNumDocuments] = useState(0)
     // const [minutesPerAudioFile, setMinutesPerAudioFile] = useState(0)
@@ -188,6 +190,9 @@ export default function Stages(props) {
         }else if (event.name === 'imageAnalysis') {
             setCurrentOption(_.cloneDeep(event))
             setHideAnalyzeImageDialog(false)
+        }else if (event.name === 'addSecurityGroups') {
+            setCurrentOption(_.cloneDeep(event))
+            setHideAddSecurityGroupsDialog(false)
         }else {
             addItemToPipeline(event)
         }
@@ -236,6 +241,7 @@ export default function Stages(props) {
                 <JsonToTextDialog hideDialog={hideJsonToTextDialog} setHideDialog={setHideJsonToTextDialog} currentOption={currentOption} addItemToPipeline={addItemToPipeline} />
                 <TableToText hideDialog={hideTableToTextDialog} setHideDialog={setHideTableToTextDialog} currentOption={currentOption} addItemToPipeline={addItemToPipeline} />
                 <AnalyzeImageDialog hideDialog={hideAnalyzeImageDialog} setHideDialog={setHideAnalyzeImageDialog} currentOption={currentOption} addItemToPipeline={addItemToPipeline} />
+                <AddSecurityGroupsDialog hideDialog={hideAddSecurityGroupsDialog} setHideDialog={setHideAddSecurityGroupsDialog} currentOption={currentOption} addItemToPipeline={addItemToPipeline} />
                 {renderOptions(options)}
             </>
         )

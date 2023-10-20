@@ -339,6 +339,4 @@ export default function SelectPipeline(props) {
             </div>
         )
     }
-
-
 }

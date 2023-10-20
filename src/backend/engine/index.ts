@@ -86,7 +86,10 @@ export class BpaEngine {
         if (stage.service.name == 'view') {
             return true
         }
-        if (stage.service.name == 'changeOutput') {
+        // if (stage.service.name == 'changeOutput') {
+        //     return true
+        // }
+        if (stage.service.inputTypes.includes("any")) {
             return true
         }
         if (stage.service.inputTypes.includes(input)) {

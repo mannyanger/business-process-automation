@@ -274,4 +274,25 @@ export class TextSegmentation {
         }
     }
 
+
+    public addSecurityGroups = async (input: BpaServiceObject, index: number): Promise<BpaServiceObject> => {
+
+        const groups: string[] = input.serviceSpecificConfig.groups
+
+        input.aggregatedResults["addSecurityGroups"] = { groups: groups }
+        input.resultsIndexes.push({ index: index, name: "addSecurityGroups", type: "addSecurityGroups" })
+        return {
+            data: groups,
+            label: "addSecurityGroups",
+            bpaId: input.bpaId,
+            filename: input.filename,
+            pipeline: input.pipeline,
+            type: "addSecurityGroups",
+            aggregatedResults: input.aggregatedResults,
+            resultsIndexes: input.resultsIndexes,
+            index: index,
+            id: input.id,
+            vector: input.vector
+        }
+    }
 }
