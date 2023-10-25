@@ -1,14 +1,8 @@
 import { AzureFunction, Context, HttpRequest } from "@azure/functions"
 import axios from "axios"
 
-import { BufferWindowMemory, ChatMessageHistory } from "langchain/memory";
-import { ChainValues } from "langchain/schema";
-import { CogSearchRetrievalQAChain } from "../langchainlibs/chains/cogSearchRetrievalQA";
-import { CogSearchTool } from "../langchainlibs/tools/cogsearch";
-import { PlanAndExecuteAgentExecutor } from "langchain/experimental/plan_and_execute";
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { initializeAgentExecutorWithOptions } from "langchain/agents";
-import { Tool } from "langchain/tools"
+import { ChatMessageHistory } from "langchain/memory";
+
 
 process.env.OPENAI_API_TYPE = "azure"
 process.env.AZURE_OPENAI_API_KEY = process.env.OPENAI_KEY
@@ -20,61 +14,6 @@ process.env.AZURE_OPENAI_API_VERSION = "2023-03-15-preview"
 process.env.AZURE_OPENAI_API_BASE = process.env.OPENAI_ENDPOINT
 
 
-
-const runChain = async (pipeline, history): Promise<ChainValues> => {
-  const chain = new CogSearchRetrievalQAChain(pipeline.chainParameters)
-  let outputKey: string
-  if (pipeline.chainParameters.type === "refine") {
-    outputKey = "output_text"
-  } else {
-    outputKey = "text"
-  }
-
-  const memory: BufferWindowMemory = new BufferWindowMemory({ k: pipeline.memorySize, memoryKey: "chat_history", outputKey: outputKey})
-  const query = history[history.length - 1].user
-  const out = await chain.run(query, memory)
-  return out
-}
-
-const runAgent = async (pipeline, history): Promise<ChainValues> => {
-  const tools: Tool[] = []
-  for (const t of pipeline.parameters.tools) {
-    t.history = convertToLangChainMessage(history)
-    const tool = new CogSearchTool(t)
-    tools.push(tool)
-  }
-  let executor
-  switch (pipeline.subType) {
-    case "zero-shot-react-description":
-    case "chat-zero-shot-react-description":
-    case "openai-functions":
-      executor = await initializeAgentExecutorWithOptions(
-        tools,
-        new ChatOpenAI(pipeline.parameters.llmConfig),
-        { agentType: pipeline.subType, verbose: true }
-      );
-      break;
-    case "plan-and-execute":
-      executor = PlanAndExecuteAgentExecutor.fromLLMAndTools({
-        llm: new ChatOpenAI(pipeline.parameters.llmConfig),
-        tools,
-      });
-      break;
-
-  }
-  const query = history[history.length - 1].user
-  const controller = new AbortController();
-
-  // Call `controller.abort()` somewhere to cancel the request.
-  setTimeout(() => {
-    controller.abort();
-  }, 60000);
-  const result = await executor.call({
-    input: query, signal: controller.signal
-  });
-
-  return result
-}
 
 const convertToMessage = (history) => {
   const messages = []
@@ -184,63 +123,16 @@ const defaultChat = async (context, req) => {
 
 }
 
-const run = async (pipeline: any, history: any): Promise<ChainValues> => {
-
-  if (pipeline.type === "chain") {
-    return runChain(pipeline, history)
-  } else if (pipeline.type === 'agent') {
-    return runAgent(pipeline, history)
-  }
-
-  return null
-}
-
-const toHtml = (thoughts) => {
-  let out = "<div>"
-  for(const t of thoughts){
-    out += `<div>${Object.keys(t)[0]} : ${(Object.values(t)[0] as string).replace('\n','<br>')}</div><br>`
-  }
-  out += "</div>"
-  return out
-}
-
 const httpTrigger: AzureFunction = async function (context: Context, req: HttpRequest): Promise<void> {
 
   try {
-    if (req.body.pipeline.name === 'default') {
       return defaultChat(context, req)
-    } else {
-      const v = await run(req.body.pipeline, req.body.history)
-      let answer = ""
-      if (v?.output) {
-        answer = v.output
-      } else if (v?.text) {
-        answer = v.text
-      } else if (v?.output_text) {
-        answer = v.output_text
-      }
-
-      let data_points = []
-      if (v?.sourceDocuments) {
-        for (const d of v.sourceDocuments) {
-          data_points.push({
-            title: d.metadata.filename,
-            content: d.pageContent
-          })
-        }
-      }
-
-      context.res = {
-        body: { "data_points": data_points, "answer": answer, "thoughts": toHtml(v?.thoughts) }
-      }
-    }
   } catch (err) {
     context.res = {
       body: { "data_points": [], "answer": `Something went wrong. ${err.message}`, "thoughts": "" }
     }
   }
 
-  //defaultChat(context, req)
 };
 
 

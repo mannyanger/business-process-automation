@@ -46,11 +46,11 @@ export async function chatApi(options) {
                 semantic_captions: options.overrides?.semanticCaptions,
                 top: options.overrides?.top,
                 temperature: options.overrides?.temperature,
-                prompt_template: options.overrides?.promptTemplate,
-                prompt_template_prefix: options.overrides?.promptTemplatePrefix,
-                prompt_template_suffix: options.overrides?.promptTemplateSuffix,
-                exclude_category: options.overrides?.excludeCategory,
-                suggest_followup_questions: options.overrides?.suggestFollowupQuestions,
+                // prompt_template: options.overrides?.promptTemplate,
+                // prompt_template_prefix: options.overrides?.promptTemplatePrefix,
+                // prompt_template_suffix: options.overrides?.promptTemplateSuffix,
+                // exclude_category: options.overrides?.excludeCategory,
+                // suggest_followup_questions: options.overrides?.suggestFollowupQuestions,
                 vector_search_pipeline: options.overrides?.vectorSearchPipeline
             }
         })
