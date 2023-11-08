@@ -4,16 +4,13 @@ import { HumanMessage, AIMessage } from "langchain/schema";
 import { BufferMemory, ChatMessageHistory  } from "langchain/memory";
 import { ConversationChain } from "langchain/chains";
 
-import * as data from '../local.settings.json'
 
 process.env.OPENAI_API_TYPE = "azure"
-process.env.AZURE_OPENAI_API_KEY = data.Values.OPENAI_KEY
-process.env.AZURE_OPENAI_API_INSTANCE_NAME = `oai${data.Values.COSMOS_DB_CONTAINER}`
-process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME = data.Values.OPENAI_DEPLOYMENT_TEXT
+process.env.AZURE_OPENAI_API_KEY = process.env.OPENAI_KEY
+process.env.AZURE_OPENAI_API_INSTANCE_NAME = `oai${process.env.COSMOS_DB_CONTAINER}`
+process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME = process.env.OPENAI_DEPLOYMENT_TEXT
 process.env.AZURE_OPENAI_API_VERSION = "2023-03-15-preview"
-process.env.AZURE_OPENAI_API_BASE = data.Values.OPENAI_ENDPOINT
-process.env.COGSEARCH_URL = data.Values.COGSEARCH_URL
-process.env.COGSEARCH_APIKEY = data.Values.COGSEARCH_APIKEY
+process.env.AZURE_OPENAI_API_BASE = process.env.OPENAI_ENDPOINT
 
 const getInputs = (history) => {
     const messages = []
