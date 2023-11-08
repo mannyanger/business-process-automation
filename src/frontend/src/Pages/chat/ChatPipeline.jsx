@@ -21,7 +21,7 @@ const processTypes = [
     }
 ]
 
-const EnterpriseSearch = () => {
+const EnterpriseSearch = (props) => {
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
     const [retrieveCount, setRetrieveCount] = useState(3);
 
@@ -200,16 +200,19 @@ const EnterpriseSearch = () => {
         const stages = []
         let firstStage = {}
         let count = 1
-        for(const c in sc){
-            if(chatPipeline.includes(sc[c].name)){
-                console.log(sc[c].name)
-                if(count === 1){
-                    firstStage = sc[c]
-                } else {
-                    stages.push(sc[c])
+        for(const c of chatPipeline){
+            for(const s in sc){
+                if(c === sc[s].name){
+                    console.log(sc[s].name)
+                    if(count === 1){
+                        firstStage = sc[s]
+                    } else {
+                        stages.push(sc[s])
+                    }
+                    count++
                 }
-                count++
             }
+            
         }
         const newPipeline = {
             name : "myDynamicPipeline",
@@ -226,7 +229,7 @@ const EnterpriseSearch = () => {
             currentPipelines.data.pipelines.push(newPipeline)
             await axios.post('/api/config', currentPipelines.data)
         }
-        console.log(JSON.stringify(chatPipeline))
+        props.updatePipelineList()
     }
 
     // const onCreateCogSearchPipeline = async () => {

@@ -187,10 +187,11 @@ export default function SelectPipeline(props) {
     const [newPipelineName, setNewPipelineName] = useState("")
     const [selectedPipeline, setSelectedPipeline] = useState(null)
     const [buttonsDisabled, setButtonsDisabled] = useState(true)
-    //const [forceUpdate, setForceUpdate] = useState(0)
+    const [forceUpdate, setForceUpdate] = useState(0)
 
     useEffect(() => {
         try {
+            console.log(forceUpdate)
             axios.get(`/api/config?id=${pipelinesLabel}`).then(ret => {
                 if (ret.data === '') {
                     setPipelines([])
@@ -202,7 +203,7 @@ export default function SelectPipeline(props) {
         } catch (err) {
             console.log(err)
         }
-    }, [])
+    }, [forceUpdate])
 
     const onPipelineNameChange = (event) => {
         setNewPipelineName(event.target.value)
@@ -287,6 +288,10 @@ export default function SelectPipeline(props) {
         }
     }
 
+    const updatePipelineList = () => {
+        setForceUpdate(forceUpdate + 1)
+    }
+
     const renderPipelines = () => {
         if (pipelines) {
             return (
@@ -340,7 +345,7 @@ export default function SelectPipeline(props) {
                     <Button content="Prebuilt Vector Embedding Search" primary disabled={buttonsDisabled} onClick={onCreateVectorPipeline} style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
                 </div>
                 <div style={{ paddingTop: "50px",width: "50%"}}>
-                    <EnterpriseSearch />
+                    <EnterpriseSearch updatePipelineList={updatePipelineList}/>
                 </div>
             </div>
         )
