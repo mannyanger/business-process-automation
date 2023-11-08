@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Text, Button, Input, Skeleton } from '@fluentui/react-northstar';
 import Stages from '../Pages/Stages'
 import { DeleteOutline } from '@material-ui/icons';
+import EnterpriseSearch from '../Pages/chat/ChatPipeline'
 
 
 const pipelinesLabel = "pipelines"
@@ -320,22 +321,27 @@ export default function SelectPipeline(props) {
         return (<Stages onSelectContent={props.onSelectContent} selectedPipelineName={selectedPipeline.name} />)
     } else {
         return (
-            <div style={{ paddingTop: "50px" }}>
-                <Text weight="semibold" content="Create Or Select A Pipeline" style={{ fontSize: "18px", display: "block", width: "100%", marginBottom: "20px" }} />
-                <p style={{ marginBottom: "20px" }} >BPA Accelerator can support more than one pipeline.  Each pipeline is linked to a directory in Blob Storage.  The path of the linked pipeline will be presented when the pipeline is created.</p>
-                <Text weight="semibold" content="Existing Pipelines" style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
-                <div style={{ paddingBottom: "50px" }}>
-                    {renderPipelines()}
-                </div>
-                <Text weight="semibold" content="Create New Pipeline"  style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
-                <div style={{ paddingBottom: "50px" }}>
-                    <Text content="Enter New Pipeline Name" style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
-                    <Input style={{ height: "30px" }} value={newPipelineName} onChange={onPipelineNameChange} />
-                </div>
+            <div style={{display:"flex", flexDirection:"row"}}>
+                <div style={{ paddingTop: "50px",width: "50%"}}>
+                    <Text weight="semibold" content="Create Or Select A Pipeline" style={{ fontSize: "18px", display: "block", marginBottom: "20px" }} />
+                    <p style={{ marginBottom: "20px" }} >BPA Accelerator can support more than one pipeline.  Each pipeline is linked to a directory in Blob Storage.  The path of the linked pipeline will be presented when the pipeline is created.</p>
+                    <Text weight="semibold" content="Existing Pipelines" style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
+                    <div style={{ paddingBottom: "50px" }}>
+                        {renderPipelines()}
+                    </div>
+                    <Text weight="semibold" content="Create New Pipeline"  style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
+                    <div style={{ paddingBottom: "50px" }}>
+                        <Text content="Enter New Pipeline Name" style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
+                        <Input style={{ height: "30px" }} value={newPipelineName} onChange={onPipelineNameChange} />
+                    </div>
 
-                <Button content="Create Custom Pipeline" primary disabled={buttonsDisabled} onClick={onCreatePipeline} style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
-                <Button content="Prebuilt Cognitive Search Pipeline" primary disabled={buttonsDisabled} onClick={onCreateCogSearchPipeline} style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
-                <Button content="Prebuilt Vector Embedding Search" primary disabled={buttonsDisabled} onClick={onCreateVectorPipeline} style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
+                    <Button content="Create Custom Pipeline" primary disabled={buttonsDisabled} onClick={onCreatePipeline} style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
+                    <Button content="Prebuilt Cognitive Search Pipeline" primary disabled={buttonsDisabled} onClick={onCreateCogSearchPipeline} style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
+                    <Button content="Prebuilt Vector Embedding Search" primary disabled={buttonsDisabled} onClick={onCreateVectorPipeline} style={{ fontSize: "14px", display: "block", width: "100%", marginBottom: "20px" }} />
+                </div>
+                <div style={{ paddingTop: "50px",width: "50%"}}>
+                    <EnterpriseSearch />
+                </div>
             </div>
         )
     }

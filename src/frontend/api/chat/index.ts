@@ -8,8 +8,6 @@ process.env.OPENAI_API_TYPE = "azure"
 process.env.AZURE_OPENAI_API_KEY = process.env.OPENAI_KEY
 process.env.AZURE_OPENAI_API_INSTANCE_NAME = `oai${process.env.COSMOS_DB_CONTAINER}`
 process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME = process.env.OPENAI_DEPLOYMENT_TEXT
-// process.env.AZURE_OPENAI_API_COMPLETIONS_DEPLOYMENT_NAME="gpt-35-turbo"
-// process.env.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME="gpt-35-turbo"
 process.env.AZURE_OPENAI_API_VERSION = "2023-03-15-preview"
 process.env.AZURE_OPENAI_API_BASE = process.env.OPENAI_ENDPOINT
 
@@ -24,24 +22,6 @@ const convertToMessage = (history) => {
       messages.push({ role: "assistant", content: h.assistant })
     } if (h?.tool) {
       messages.push({ role: "tool", content: h.tool })
-    }
-  }
-
-  return messages
-}
-
-const convertToLangChainMessage = (history) => {
-  const messages = new ChatMessageHistory();
-  //messages.addAIChatMessage(aiMessage)
-  for (let i = 0; i < history.length - 1; i++) {  //ignore most recent user utterance
-    //for (const h of history) {
-    const h = history[i]
-    if (h?.user) {
-      messages.addUserMessage(h.user)
-    } if (h?.assistant) {
-      messages.addAIChatMessage(h.assistant)
-    } if (h?.tool) {
-      messages.addMessage(h.tool)
     }
   }
 
